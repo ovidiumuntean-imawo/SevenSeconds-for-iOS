@@ -1,0 +1,30 @@
+{
+  "configurations" : [
+    {
+      "id" : "508CD846-3094-4698-B2B7-79DF16E240D8",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "performanceAntipatternCheckerEnabled" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:Seven Seconds Champions.xcodeproj",
+      "identifier" : "A934963A2D2E8EA2007C5FD8",
+      "name" : "Seven Seconds Champions"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:Seven Seconds Champions.xcodeproj",
+        "identifier" : "A93496582D2E8EA3007C5FD8",
+        "name" : "Seven Seconds ChampionsUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
