@@ -120,7 +120,7 @@ struct NormalGameOverView: View {
                         .font(.system(size: 20, weight: .bold, design: .rounded))
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
-                        .background(Color.neonCyan.opacity(0.8))
+                        .background(Color.neonBlue.opacity(0.8))
                         .foregroundColor(.white)
                         .cornerRadius(16)
                         .overlay(
