@@ -52,7 +52,8 @@ struct RadialTimerView: View {
                         .neonOrange,
                         .white,
                         .neonCyan,
-                        .neonBlue
+                        .neonBlue,
+                        .neonPurple
                     ]),
                     center: .center,
                     startAngle: .degrees(180 + gradientRotation),

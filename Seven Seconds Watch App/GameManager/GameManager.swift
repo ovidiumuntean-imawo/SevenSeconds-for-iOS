@@ -10,14 +10,25 @@ import SwiftUI
 import AVFoundation
 import GameKit
 
+enum ChallengeOutcome {
+    case win, loss
+}
+
 class GameManager: ObservableObject {
-    @Published var timeLeft: Int = 7
+    @Published var timeLeft: Double = 7.0
     @Published var currentScore: Int = 0
     @Published var previousScore: Int = 0
     @Published var isGameRunning: Bool = false
     @Published var isGameOver: Bool = false
+    
+    // Stări noi necesare pentru ecranele moderne de pe ceas
+    @Published var isNewHighScore: Bool = false
+    @Published var challengeTarget: Int? = nil
+    @Published var challengeOutcome: ChallengeOutcome? = nil
 
+    private var highScore: Int = UserDefaults.standard.integer(forKey: "highScore")
     private var timer: Timer?
+    
     private let timerBeep: AVAudioPlayer?
     private let iceCracking: AVAudioPlayer?
     private let explodeBeep: AVAudioPlayer?
@@ -30,30 +41,44 @@ class GameManager: ObservableObject {
         self.buttonBeep = AudioPlayerFactory.createAudioPlayer(fileName: "button", fileType: "wav")
     }
 
-    func startGame() {
+    private func stopTimer() {
+        timer?.invalidate()
+        timer = nil
+        
+        if let player = timerBeep, player.isPlaying {
+            player.stop()
+            player.currentTime = 0
+        }
+    }
+
+    func startGame(challengeTarget: Int? = nil) {
+        stopTimer()
+        
+        self.challengeTarget = challengeTarget
+        self.challengeOutcome = nil
+        self.isNewHighScore = false
+        
         isGameRunning = true
         currentScore = 0
-        timeLeft = 7
+        timeLeft = 7.0
         
         iceCracking?.play()
 
-        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+        timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
             guard let self = self else { return }
             
-            // Verificăm dacă mai avem timp rămas
             if self.timeLeft > 0 {
-                // Scădem o secundă la fiecare apel
-                self.timeLeft -= 1
+                self.timeLeft -= 0.1
                 
-                // Acum verificăm valoarea NOUĂ a lui timeLeft
-                if self.timeLeft == 5 || self.timeLeft == 2 {
-                    // Dacă am ajuns la 6 sau 3 secunde, punem sunetul de damage
-                } else if self.timeLeft > 0 {
-                    // Pentru orice altă valoare mai mare ca 0, punem beep-ul normal
+                // Calculăm secundele "pline" pentru a da play la sunet
+                let isFullSecond = abs(self.timeLeft.truncatingRemainder(dividingBy: 1.0)) < 0.05
+                if isFullSecond && self.timeLeft > 0 {
                     self.timerBeep?.play()
-                } else {
-                    // Dacă timeLeft a ajuns la 0, invalidăm timer-ul și terminăm jocul
-                    self.timer?.invalidate()
+                }
+                
+                if self.timeLeft <= 0.01 { // Safety check pentru floating point
+                    self.timeLeft = 0
+                    self.stopTimer()
                     self.endGame()
                 }
             }
@@ -66,6 +91,18 @@ class GameManager: ObservableObject {
         
         explodeBeep?.play()
 
+        if let target = self.challengeTarget {
+            self.challengeOutcome = currentScore > target ? .win : .loss
+        } else {
+            self.challengeOutcome = nil
+        }
+        
+        if currentScore > highScore {
+            highScore = currentScore
+            UserDefaults.standard.set(highScore, forKey: "highScore")
+            isNewHighScore = true
+        }
+
         if currentScore < 145 {
             GameCenterManager.shared.submitScore(with: currentScore)
         }
@@ -74,13 +111,17 @@ class GameManager: ObservableObject {
     }
 
     func buttonPressed() {
-        // buttonBeep?.play()
+        buttonBeep?.play()
     }
 
     func resetGame() {
+        stopTimer()
         isGameRunning = false
         isGameOver = false
-        timeLeft = 7
+        timeLeft = 7.0
         currentScore = 0
+        
+        challengeTarget = nil
+        challengeOutcome = nil
     }
 }

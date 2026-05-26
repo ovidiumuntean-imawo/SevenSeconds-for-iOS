@@ -41,9 +41,13 @@ class Sparks {
         emitterCell.color = UIColor.white.cgColor
         emitterLayer?.emitterCells = [emitterCell]
         
-        if let emitterLayer = emitterLayer,
-           let window = UIApplication.shared.windows.first {
-            window.layer.addSublayer(emitterLayer)
+        if let emitterLayer = emitterLayer {
+            if let windowScene = UIApplication.shared.connectedScenes
+                .compactMap({ $0 as? UIWindowScene })
+                .first,
+               let window = windowScene.windows.first {
+                window.layer.addSublayer(emitterLayer)
+            }
         }
     }
     
