@@ -120,7 +120,7 @@ struct NormalGameOverView: View {
                         .font(.system(size: 20, weight: .bold, design: .rounded))
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 16)
-                        .background(Color.neonBlue.opacity(0.8))
+                        .background(Color.neonBlue.opacity(0.6))
                         .foregroundColor(.white)
                         .cornerRadius(16)
                         .overlay(
@@ -133,7 +133,7 @@ struct NormalGameOverView: View {
                     
                     ShareLink(item: challengeText) {
                         HStack {
-                            Image(systemName: "square.and.arrow.up")
+                            Image(systemName: "shareplay")
                                 .font(.title2)
                             Text("CHALLENGE FRIEND")
                                 .font(.system(size: 16, weight: .bold, design: .rounded))
@@ -141,7 +141,7 @@ struct NormalGameOverView: View {
                         }
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
-                        .background(Color.neonPurple.opacity(0.8))
+                        .background(Color.neonPurple.opacity(0.4))
                         .foregroundColor(.white)
                         .cornerRadius(12)
                         .overlay(
@@ -163,7 +163,7 @@ struct NormalGameOverView: View {
                             }
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 14)
-                            .background(Color.yellow.opacity(0.6))
+                            .background(Color.yellow.opacity(0.2))
                             .foregroundColor(.white)
                             .cornerRadius(12)
                             .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.yellow.opacity(0.3), lineWidth: 1))
@@ -344,3 +344,4 @@ struct ChallengeResultView: View {
     return GameOverView_iPhone(gameManager: manager, previousScore: .constant(30))
         .environmentObject(AppState())
 }
+

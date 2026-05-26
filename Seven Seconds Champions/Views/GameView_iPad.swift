@@ -175,6 +175,8 @@ struct GameView_iPad: View {
     }
     
     private func handleTap() {
+        guard !gameManager.isGameOver else { return }
+        
         if !gameManager.isGameRunning {
             gameManager.startGame(
                 emitterLayer: emitterLayer,
@@ -186,6 +188,7 @@ struct GameView_iPad: View {
         } else {
             gameManager.currentScore += 1
             gameManager.buttonPressed()
+            
             impactGen.impactOccurred(intensity: 1.0)
             triggerShake()
             spawnFloatingPoint()
@@ -193,13 +196,10 @@ struct GameView_iPad: View {
     }
     
     private func triggerShake() {
-        let intensity: CGFloat = 12.0
-        withAnimation(.linear(duration: 0.05)) { screenShakeOffset = -intensity }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-            withAnimation(.linear(duration: 0.05)) { screenShakeOffset = intensity }
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            withAnimation(.linear(duration: 0.05)) { screenShakeOffset = 0 }
+        let intensity: CGFloat = CGFloat.random(in: -8...8)
+        
+        withAnimation(.spring(response: 0.1, dampingFraction: 0.2, blendDuration: 0)) {
+            screenShakeOffset = intensity
         }
     }
     
@@ -233,3 +233,4 @@ struct GameView_iPad: View {
         .environmentObject(AppState())
         .previewDevice(PreviewDevice(rawValue: "iPad Pro (12.9-inch)"))
 }
+

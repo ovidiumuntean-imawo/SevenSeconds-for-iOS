@@ -141,14 +141,14 @@ struct NormalGameOverView_iPad: View {
                     
                     ShareLink(item: challengeText) {
                         HStack {
-                            Image(systemName: "square.and.arrow.up")
+                            Image(systemName: "shareplay")
                                 .font(.system(size: 24 * scale))
                             Text("CHALLENGE FRIEND")
                                 .font(.system(size: 18 * scale, weight: .bold))
                         }
                         .frame(maxWidth: 400 * scale)
                         .padding(.vertical, 16 * scale)
-                        .background(Color.neonPurple.opacity(0.8))
+                        .background(Color.neonPurple.opacity(0.6))
                         .foregroundColor(.white)
                         .cornerRadius(12 * scale)
                         .overlay(
@@ -166,7 +166,7 @@ struct NormalGameOverView_iPad: View {
                         }
                         .frame(maxWidth: 400 * scale)
                         .padding(.vertical, 16 * scale)
-                        .background(Color.yellow.opacity(0.6))
+                        .background(Color.yellow.opacity(0.4))
                         .foregroundColor(.white)
                         .cornerRadius(12 * scale)
                         .overlay(RoundedRectangle(cornerRadius: 12 * scale).stroke(Color.yellow.opacity(0.3), lineWidth: 1 * scale))
@@ -323,3 +323,4 @@ struct ChallengeResultView_iPad: View {
         .environmentObject(AppState())
         .previewDevice(PreviewDevice(rawValue: "iPad Pro (12.9-inch)"))
 }
+
