@@ -54,13 +54,13 @@ class GameManager: ObservableObject {
     func startGame(challengeTarget: Int? = nil) {
         stopTimer()
         
-        self.challengeTarget = challengeTarget
-        self.challengeOutcome = nil
-        self.isNewHighScore = false
-        
+        isNewHighScore = false
         isGameRunning = true
         currentScore = 0
-        timeLeft = 7.0
+        timeLeft = 7
+        
+        self.challengeTarget = challengeTarget
+        self.challengeOutcome = nil
         
         iceCracking?.play()
 
@@ -68,16 +68,15 @@ class GameManager: ObservableObject {
             guard let self = self else { return }
             
             if self.timeLeft > 0 {
-                self.timeLeft -= 0.1
+                self.timeLeft = max(0, self.timeLeft - 0.1)
                 
-                // Calculăm secundele "pline" pentru a da play la sunet
                 let isFullSecond = abs(self.timeLeft.truncatingRemainder(dividingBy: 1.0)) < 0.05
+                
                 if isFullSecond && self.timeLeft > 0 {
                     self.timerBeep?.play()
                 }
                 
-                if self.timeLeft <= 0.01 { // Safety check pentru floating point
-                    self.timeLeft = 0
+                if self.timeLeft <= 0 {
                     self.stopTimer()
                     self.endGame()
                 }
@@ -86,28 +85,11 @@ class GameManager: ObservableObject {
     }
 
     func endGame() {
+        stopTimer()
         isGameRunning = false
-        isGameOver = true
         
         explodeBeep?.play()
-
-        if let target = self.challengeTarget {
-            self.challengeOutcome = currentScore > target ? .win : .loss
-        } else {
-            self.challengeOutcome = nil
-        }
-        
-        if currentScore > highScore {
-            highScore = currentScore
-            UserDefaults.standard.set(highScore, forKey: "highScore")
-            isNewHighScore = true
-        }
-
-        if currentScore < 145 {
-            GameCenterManager.shared.submitScore(with: currentScore)
-        }
-        
-        AchievementManager.shared.handleAchievements(for: currentScore)
+        isGameOver = true
     }
 
     func buttonPressed() {

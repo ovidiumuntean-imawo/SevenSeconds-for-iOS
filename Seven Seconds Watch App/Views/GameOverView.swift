@@ -35,7 +35,7 @@ struct GameOverView_Watch: View {
         .onAppear {
             appState.challengeScoreToBeat = nil
         }
-        .onChange(of: appState.newChallengeReceived) { _ in
+        .onChange(of: appState.newChallengeReceived) {
             print("Provocare nouă primită în timp ce GameOver era deschis. Se închide...")
             dismiss()
         }

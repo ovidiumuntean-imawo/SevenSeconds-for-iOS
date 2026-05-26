@@ -5,7 +5,6 @@
 //  Created by Ovidiu Muntean on 09.01.2025.
 //
 
-
 import SwiftUI
 import WatchKit
 
@@ -56,6 +55,15 @@ struct GameView_Watch: View {
                     .offset(y: -40)
                 
                 Spacer()
+            }
+        }
+        .fullScreenCover(isPresented: $gameManager.isGameOver) {
+            GameOverView_Watch(
+                gameManager: gameManager,
+                previousScore: $gameManager.previousScore
+            )
+            .onDisappear {
+                gameManager.resetGame()
             }
         }
     }
